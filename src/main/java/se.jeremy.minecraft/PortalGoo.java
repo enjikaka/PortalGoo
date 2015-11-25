@@ -1,8 +1,6 @@
 package se.jeremy.minecraft;
 
 import java.io.File;
-import java.util.Random;
-import java.util.logging.Logger;
 
 import org.bukkit.Effect;
 import org.bukkit.Location;
