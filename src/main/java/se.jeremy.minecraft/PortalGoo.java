@@ -17,16 +17,17 @@ import org.bukkit.util.Vector;
 public class PortalGoo extends JavaPlugin implements Listener {
     FileConfiguration config;
 
-    // The value for when the player is not jumping
-    double stilla = -0.0784000015258789;
+    // yspeed value for when the player is standing still
+    double still = -0.0784000015258789;
 
-    // The calue for when the player is jumping
-    double hoppa = -0.7170746714356033;
+    // yspeed value for when the player is jumping
+    double jumping = -0.7170746714356033;
 
     private double getNode(String m) {
         return config.getDouble(m);
     }
 
+    @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
         config = getConfig();
@@ -67,11 +68,14 @@ public class PortalGoo extends JavaPlugin implements Listener {
         double pp = getNode("sidePoof") * 1.0D;
         double pn = getNode("sidePoof") * -1.0D;
 
-        Vector v = player.getVelocity();
-
-        double vy = v.getY();
+        Vector velocity = player.getVelocity();
+        double yspeed = velocity.getY();
 
         String playerDirection = getDirection(player);
+
+        Material portalGooBlock = Material.getMaterial(config.getString("portalGooBlock"));
+        double sidePoof = getNode("sidePoof");
+        double heightPoof = getNode("heightPoof");
 
         switch (playerDirection) {
             case "N":
@@ -104,11 +108,11 @@ public class PortalGoo extends JavaPlugin implements Listener {
                 break;
         }
 
-        Material portalGooBlock = Material.getMaterial(config.getString("portalGooBlock"));
 
-        if ((b.equals(portalGooBlock) && c.equals(portalGooBlock) && vy != stilla) || b.equals(portalGooBlock) && vy != stilla) {
+
+        if ((b.equals(portalGooBlock) && c.equals(portalGooBlock) && yspeed != still) || b.equals(portalGooBlock) && yspeed != still) {
             player.setFallDistance(0);
-            player.setVelocity(new Vector(xb, getNode("heightPoof") * 1.0D, zb));
+            player.setVelocity(new Vector(xb, heightPoof * 1.0D, zb));
             world.playEffect(loc, Effect.SMOKE, 50);
             world.playEffect(loc, Effect.EXTINGUISH, 50);
         }
@@ -126,20 +130,20 @@ public class PortalGoo extends JavaPlugin implements Listener {
         xb = xb * 1.5D;
         zb = zb * 1.5D;
 
-        if (blockXN.equals(portalGooBlock) && vy > hoppa) {
-            player.setVelocity(new Vector(getNode("sidePoof") * 2.0D,0.5D,zb));
+        if (blockXN.equals(portalGooBlock) && yspeed > jumping) {
+            player.setVelocity(new Vector(sidePoof * 2.0D, 0.5D, zb));
         }
 
-        if (blockXP.equals(portalGooBlock) && vy > hoppa) {
-            player.setVelocity(new Vector(getNode("sidePoof") * -2.0D,0.5D,zb));
+        if (blockXP.equals(portalGooBlock) && yspeed > jumping) {
+            player.setVelocity(new Vector(sidePoof * -2.0D, 0.5D, zb));
         }
 
-        if (blockZN.equals(portalGooBlock) && vy > hoppa) {
-            player.setVelocity(new Vector(xb,0.5D,getNode("sidePoof") * 2.0D));
+        if (blockZN.equals(portalGooBlock) && yspeed > jumping) {
+            player.setVelocity(new Vector(xb, 0.5D, sidePoof * 2.0D));
         }
 
-        if (blockZP.equals(portalGooBlock) && vy > hoppa) {
-            player.setVelocity(new Vector(xb,0.5D,getNode("sidePoof") * -2.0D));
+        if (blockZP.equals(portalGooBlock) && yspeed > jumping) {
+            player.setVelocity(new Vector(xb, 0.5D, sidePoof * -2.0D));
         }
     }
 
