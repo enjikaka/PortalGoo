@@ -1,0 +1,1 @@
+PortalGoo add portal-goo-like capabilities to your Bukkit server. Lapiz Lasuli is the block for the "goo"-effect, but this can be changed in the config.
